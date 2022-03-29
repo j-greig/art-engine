@@ -28,7 +28,7 @@ const hashImages = true;
 const layerConfigurations = [
   {
     // TINNIES
-    growEditionSizeTo: 100, //1000
+    growEditionSizeTo: 500, //1000
     namePrefix: "StrongBot",
     layersOrder: [
       { name: "Background" },
@@ -141,10 +141,8 @@ const incompatibleXXXXXXXXXX = {
   "Unicorn": "Rocket blue",
 
   // JARHEAD INCOMPATABILITIES
-  "Giant Eyeball": ["Speakers", "Halo", "Spikes"],
-  "VR Headset": ["Speakers"," Halo", "Crown", "Spikes", "Devil"],
-  "Gadget Alien": ["Speakers"," Halo", "Crown", "Spikes"],
-
+  "Soldier": ["Cat"],
+  // "Gadget Alien": ["Speakers"," Halo", "Crown", "Spikes", "Devil"],
 
   // FLATSCREEN INCOMPATABILITIES
 
@@ -277,7 +275,7 @@ const uniqueDnaTorrance = 10000;
 const useRootTraitType = true;
 
 const preview = {
-  thumbPerRow: 20,
+  thumbPerRow: 12,
   thumbWidth: 300,
   imageRatio: format.width / format.height,
   imageName: "preview.png",
