@@ -28,104 +28,16 @@ const hashImages = true;
 const layerConfigurations = [
   {
     // TINNIES
-    growEditionSizeTo: 2000, //1000
+    growEditionSizeTo: 100, //1000
     namePrefix: "StrongBot",
     layersOrder: [
       { name: "Background" },
       { name: "Type" },
-      // { name: "Head Tinnies", trait: "Head"  },
-      // { name: "Body Tinnies", trait: "Body"  },
-      // { name: "Arms Tinnies", trait: "Arms"  },
-      // { name: "Control Panel Tinnies", trait: "Control Panel" },
-      // // FORCE EARS
-      // { name: "Ears Tinnie" ,
-      //   options: {
-      //     bypassDNA: true
-      //   }
-      // },
-      // { name: "Face Tinnies", trait: "Face" },
-      // { name: "Headwear Tinnies", trait: "Headwear" },
-      // { name: "Drones Tinnies", trait: "Companion" },
-      // { name: "Mouth" },
-      // { name: "Nose" }
     ],
   },
   // {
-  //   // LASER TINNIES
-  //   growEditionSizeTo: 110, //1100
-  //   namePrefix: "StrongBot",
-  //   layersOrder: [
-  //     { name: "Background" },
-  //     { name: "Head Tinnies", trait: "Head"  },
-  //     { name: "Body Tinnies", trait: "Body"  },
-  //     { name: "Arms Tinnies", trait: "Arms"  },
-  //     { name: "Control Panel Tinnies", trait: "Control Panel" },
-  //     // FORCE EARS
-  //     { name: "Ears Tinnie" ,
-  //       options: {
-  //         bypassDNA: true
-  //       }
-  //     },
-  //     { name: "Headwear Tinnies", trait: "Headwear" },
-  //     { name: "Face Laser Tinnies", trait: "Face",
-  //       options: {
-  //         bypassDNA: true
-  //       }
-  //     },
-  //     { name: "Drones Tinnies", trait: "Companion" },
-  //
-  //   ],
-  // },
-  // {
-  //   // DEVIL TINNIES
-  //   growEditionSizeTo: 120, //1100
-  //   namePrefix: "StrongBot",
-  //   layersOrder: [
-  //     { name: "Background" },
-  //     { name: "Head Devil Tinnies", trait: "Head" },
-  //     { name: "Body Tinnies", trait: "Body" },
-  //     { name: "Arms Tinnies", trait: "Arms" },
-  //     { name: "Control Panel Tinnies", trait: "Control Panel" },
-  //     // FORCE EARS
-  //     { name: "Ears Tinnie" ,
-  //       options: {
-  //         bypassDNA: true
-  //       }
-  //     },
-  //     // NO HEADWEAR COS IT OVERLAPS DEVIL HORN HEAD
-  //     // { name: "Headwear Tinnies" },
-  //     { name: "Face Tinnies", trait: "Face",
-  //       options: {
-  //         bypassDNA: true
-  //       }
-  //     },
-  //     { name: "Drones Tinnies", trait: "Companion" },
-  //
-  //   ],
-  // },
-  // {
-  //   // CAT TINNIES
-  //   growEditionSizeTo: 130, //1100
-  //   namePrefix: "StrongBot",
-  //   layersOrder: [
-  //     { name: "Background" },
-  //     { name: "Head Tinnies", trait: "Head"  },
-  //     { name: "Body Tinnies", trait: "Body"  },
-  //     { name: "Arms Tinnies", trait: "Arms"  },
-  //     { name: "Control Panel Tinnies", trait: "Control Panel" },
-  //     // NO NEED TO FORCE EARS AS INCLUDED IN FACE
-  //     { name: "Face Cat Tinnie", trait: "Face",
-  //       options: {
-  //         bypassDNA: true
-  //       }
-  //     },
-  //     { name: "Drones Tinnies", trait: "Companion" },
-  //
-  //   ],
-  // },
-  // {
   //   // JARHEADS // 2100
-  //   growEditionSizeTo: 25, //2100
+  //   growEditionSizeTo: 99, //2100
   //   namePrefix: "StrongBot",
   //   layersOrder: [
   //     { name: "Background" },
@@ -139,7 +51,7 @@ const layerConfigurations = [
   // },
   // {
   //   // JARHEAD WITH EYEBALL + HANDLE [RARE] // 2200
-  //   growEditionSizeTo: 30,
+  //   growEditionSizeTo: 102,
   //   namePrefix: "StrongBot",
   //   layersOrder: [
   //     { name: "Background" },
@@ -153,10 +65,10 @@ const layerConfigurations = [
   // },
   // {
   //   // JARHEAD WITH VR HEADSET [RARE] // ????
-  //   growEditionSizeTo: 35,
+  //   growEditionSizeTo: 140,
   //   namePrefix: "StrongBot",
   //   layersOrder: [
-  //     { name: "Background Forced" },
+  //     { name: "Background" },
   //     { name: "Body Jarhead", trait: "Body"  },
   //     { name: "Arms Jarhead", trait: "Arms" },
   //     { name: "Control Panel Jarhead", trait: "Control Panel" },
@@ -210,7 +122,7 @@ const stickieOutiesAndPixelFaces = stickieOuties.concat(pixelFaces)
 const incompatible = {
 
   // TINNIES
-  Stoner: ["Apollo","Node", "Headphones","At the movies"],
+  Stoner: ["Apollo","Node", "Headphones"],
 
   "Floating green": ["Angry cyclops"],
   "Floating pink": ["Angry cyclops"],
@@ -227,6 +139,14 @@ const incompatibleXXXXXXXXXX = {
   "Stoner": "Apollo",
   "Unicorn": "Headphones",
   "Unicorn": "Rocket blue",
+
+  // JARHEAD INCOMPATABILITIES
+  "Giant Eyeball": ["Speakers", "Halo", "Spikes"],
+  "VR Headset": ["Speakers"," Halo", "Crown", "Spikes", "Devil"],
+  "Gadget Alien": ["Speakers"," Halo", "Crown", "Spikes"],
+
+
+  // FLATSCREEN INCOMPATABILITIES
 
   // Horns: Prevent stickie-out things overlapping
   "Purple horns flatscreen": ["Rainbow chad", "Triple chad", "Toothy chad", "Ninja bear", "Low battery", "Fishface", "Star-eyed smile", "Star-eyed toothy", "Rodent"],
@@ -262,7 +182,6 @@ const incompatibleXXXXXXXXXX = {
   // Prevent rodent (tail) over sword
   "Swordsman white and pink" : ["Rodent"]
 
-  // END TINNIES INCOMPATABILITIES
 };
 
 /**
@@ -279,7 +198,6 @@ const forcedCombinations = {
 
   // JARHEADS
   "Alien Insect": ["Cracked Jar"],
-  "VR Headset": ["White Jar"],
   "Gadget Alien": ["Nodule Jar"],
 
   // FLATSCREENS
@@ -359,8 +277,8 @@ const uniqueDnaTorrance = 10000;
 const useRootTraitType = true;
 
 const preview = {
-  thumbPerRow: 10,
-  thumbWidth: 500,
+  thumbPerRow: 20,
+  thumbWidth: 300,
   imageRatio: format.width / format.height,
   imageName: "preview.png",
 };
