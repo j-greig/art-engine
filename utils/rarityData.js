@@ -1,10 +1,13 @@
 "use strict";
 
 const path = require("path");
+const createCsvWriter = require("csv-writer").createObjectCsvWriter;
+
 const isLocal = typeof process.pkg === "undefined";
 const basePath = isLocal ? process.cwd() : path.dirname(process.execPath);
 const fs = require("fs");
-const layersDir = `${basePath}/layers`;
+// const layersDir = `${basePath}/layers`;
+const layersDir = path.join(basePath, "../", "genkiFiles");
 
 console.log(path.join(basePath, "/src/config.js"));
 const {
@@ -13,177 +16,176 @@ const {
   rarityDelimiter,
 } = require(path.join(basePath, "/src/config.js"));
 
-const { getElements } = require("../src/main.js");
+const { getElements, cleanName } = require("../src/main.js");
+const metadataPath = path.join(basePath, "/build/json/_metadata.json");
 
-class Rarity {
-  constructor(traitObj, editionSize) {
-    this.trait = traitObj.trait;
-    this.chance = traitObj.chance;
-    this.occurrence = traitObj.occurrence;
-    this.percentage = `${(this.occurrence / editionSize) * 100} of 100%`;
-  }
-}
-// read json data
-let rawdata = fs.readFileSync(`${basePath}/build/json/_metadata.json`);
-let data = JSON.parse(rawdata);
-let editionSize = data.length;
+function calculate(options = {}) {
+  let rarity = {};
+  let totals = {};
+  let attributeCounts = {};
 
-let rarityData = [];
-
-// intialize layers to chart
-layerConfigurations.forEach((config) => {
-  let layers = config.layersOrder;
-  // handle pre-defined layer set attributes
-  if (config.attributes) {
-    config.attributes.forEach((attr) => {
-      rarityData[attr.trait_type] = {
-        name: attr.trait_type,
-        baseTrait: attr.trait_type,
-        elements: [
-          {
-            trait: attr.value,
-            chance: 1 / layerConfigurations.length,
-            occurrence: 0,
-          },
-        ],
-      };
-    });
-  }
-  // Get nested required subfolders and flatten them into layers
-  const allLayers = layers.reduce((acc, layer) => {
-    return [
-      ...acc,
-      ...getDirectoriesRecursive(`${basePath}/layers/${layer.name}`)
-        // get the last name in the long string path by splitting, then reversing
-        .map(
-          (pathname) =>
-            `${layer.name}${pathname.split(`${layer.name}`).reverse()[0]}`
-        )
-        // Then, filter out the folders with a weight, those are 'values' not trait_types
-        .filter(
-          (name) => !name.split("/").reverse()[0].includes(rarityDelimiter)
-        )
-        // lastly, if the original layer name was removed during split, put it back
-        .map((pathname) => {
-          return {
-            name: pathname === "" ? layer.name : pathname,
-            ...(layer.trait !== undefined && { trait: layer.trait }),
-          };
-        }),
-      // phew…we made it, fam
-    ];
-  }, []);
-  // .map((path) => path.split(`"/"`).reverse()[0])
-
-  allLayers.forEach((layer) => {
-    // get elements for each layer
-    let elementsForLayer = [];
-    let elements = getElements(`${layersDir}/${layer.name}/`, layer);
-    // flatten all sublayer elements
-    const allElements = flattenLayers(elements, "elements");
-    allElements
-      .filter((element) => element.weight !== "required")
-      .forEach((element) => {
-        // just get name and weight for each element
-        let rarityDataElement = {
-          trait: element.name,
-          chance: element.weight.toFixed(0),
-          occurrence: 0, // initialize at 0
-        };
-        elementsForLayer.push(rarityDataElement);
-      });
-
-    // ...(element.trait !== undefined && {
-    //   rootTrait: layer.name,
-    // }),
-    const cleanLayerName = layer.name.split("/").reverse()[0];
-    const baseTrait = layer.trait ? layer.trait : cleanLayerName;
-    // don't include duplicate layers
-    if (!rarityData.includes(baseTrait)) {
-      // add elements for each layer to chart
-      rarityData[baseTrait] = {
-        baseTrait,
-        name: layer.name,
-        elements: elementsForLayer,
-      };
-    }
-  });
-});
-
-/**
- * Create an array of skippable keys to skip:
- * - any trait added in extraMetadata
- * - any traits that are overwritten in config.layerCOnfigurations
- */
-const extra = extraAttributes().map((attr) => attr.trait_type);
-const filterKeys = [...extra];
-
-// fill up rarity chart with occurrences from metadata
-data.forEach((element) => {
-  let attributes = element.attributes;
-
-  attributes
-    .filter((attr) => !filterKeys.includes(attr.trait_type))
-    .forEach((attribute) => {
-      let traitType = attribute.trait_type;
-      // Check if the trait has been overwritten
-
-      let value = attribute.value;
-
-      let rarityDataTraits = rarityData[traitType];
-      rarityDataTraits.elements.forEach((rarityDataTrait) => {
-        if (rarityDataTrait.trait == value) {
-          // keep track of occurrences
-          rarityDataTrait.occurrence++;
-        }
-      });
-    });
-});
-
-// print out rarity data
-for (var layer in rarityData) {
-  console.log(`Trait type: ${layer}`);
-  const output = {};
-  for (var trait in rarityData[layer].elements) {
-    //   console.table(rarityData[layer].elements[trait]);
-    output[rarityData[layer].elements[trait].trait] = new Rarity(
-      rarityData[layer].elements[trait],
-      editionSize
+  const dataset = JSON.parse(fs.readFileSync(metadataPath)); // filter out .DS_Store
+  // .filter((item) => {
+  //   return !/(^|\/)\.[^\/\.]/g.test(item);
+  // });
+  dataset.forEach((metadata) => {
+    // const readData = fs.readFileSync(path.join(basePath, inputdir, file));
+    // const metadata = JSON.parse(readData);
+    // Push the attributes to the main counter and increment
+    metadata.attributes = metadata.attributes.filter(
+      (attr) => attr.value !== ""
     );
+
+    console.log(`how many attributes: ${metadata.attributes.length}`);
+    // add a count to the attribue counts
+    attributeCounts[metadata.attributes.length] = attributeCounts[
+      metadata.attributes.length
+    ]
+      ? attributeCounts[metadata.attributes.length] + 1
+      : 1;
+
+    metadata.attributes.forEach((attribute) => {
+      rarity = {
+        ...rarity,
+        [attribute.trait_type]: {
+          ...rarity[attribute.trait_type],
+          [attribute.value]: {
+            count: rarity[attribute.trait_type]
+              ? rarity[attribute.trait_type][attribute.value]
+                ? rarity[attribute.trait_type][attribute.value].count + 1
+                : 1
+              : 1,
+          },
+        },
+      };
+
+      totals = {
+        ...totals,
+        [attribute.trait_type]: totals[attribute.trait_type]
+          ? (totals[attribute.trait_type] += 1)
+          : 1,
+      };
+    });
+  });
+
+  // loop again to write percentages based on occurrences/ total supply
+  for (const category in rarity) {
+    for (const element in rarity[category]) {
+      rarity[category][element].percentage = (
+        (rarity[category][element].count / dataset.length) *
+        100
+      ).toFixed(4);
+    }
   }
-  console.table(output, ["chance", "occurrence", "percentage"]);
+
+  // sort everything alphabetically (could be refactored)
+  for (let subitem in rarity) {
+    rarity[subitem] = Object.keys(rarity[subitem])
+      .sort()
+      .reduce((obj, key) => {
+        obj[key] = rarity[subitem][key];
+        return obj;
+      }, {});
+  }
+  const ordered = Object.keys(rarity)
+    .sort()
+    .reduce((obj, key) => {
+      obj[key] = rarity[key];
+      return obj;
+    }, {});
+
+  // append attribute count as a trait
+  ordered["Attribute Count"] = {};
+
+  for (const key in attributeCounts) {
+    console.log(`attributeCounts ${key}`);
+    ordered["Attribute Count"][`${key} Attributes`] = {
+      count: attributeCounts[key],
+      percentage: (attributeCounts[key] / dataset.length).toFixed(4) * 100,
+    };
+  }
+
+  // TODO: Calculate rarity score by looping through the set again
+  console.log({ count: dataset.length });
+
+  const tokenRarities = [];
+
+  dataset.forEach((metadata) => {
+    metadata.attributes = metadata.attributes.filter(
+      (attr) => attr.value !== ""
+    );
+
+    // look up each one in the rarity data, and sum it
+    const raritySum = metadata.attributes.reduce((sum, attribute) => {
+      return (
+        sum + Number(ordered[attribute.trait_type][attribute.value].percentage)
+      );
+    }, 0);
+
+    tokenRarities.push({ name: metadata.name, raritySum });
+  });
+
+  tokenRarities.sort((a, b) => {
+    return a.raritySum - b.raritySum;
+  });
+
+  console.log(ordered);
+  console.log(attributeCounts);
+  outputRarityCSV(ordered);
+
+  // console.log(tokenRarities);
+  console.table(tokenRarities);
+  options.outputRanking ? outputRankingCSV(tokenRarities) : null;
 }
 
 /**
- * Deep flatten util function for flattening all nested sublayer png's
- * @param {Array} data array of layer objects
- * @returns
+ * converts the sorted rarity data objects into the csv output we are looking for
+ * @param {Array} rarityData all calculated usages and percentages
  */
-function flattenLayers(data, flatkey) {
-  return data.reduce(function (result, next) {
-    result.push(next);
-    if (next[flatkey]) {
-      result = result.concat(flattenLayers(next[flatkey]));
-      next[flatkey] = [];
+async function outputRarityCSV(rarityData) {
+  const csvWriter = createCsvWriter({
+    path: path.join(basePath, "build/_rarity.csv"),
+    header: [
+      { id: "name", title: "Attribute" },
+      { id: "count", title: "Count" },
+      { id: "percentage", title: "Percentage" },
+    ],
+  });
+  // loop through the
+  for (const trait in rarityData) {
+    await csvWriter.writeRecords([
+      { name: "" },
+      {
+        name: trait,
+      },
+    ]);
+    console.log({ trait });
+    const rows = [];
+    for (const [key, value] of Object.entries(rarityData[trait])) {
+      rows.push({
+        name: key,
+        count: rarityData[trait][key].count,
+        percentage: rarityData[trait][key].percentage,
+      });
     }
-    return result;
-  }, []);
+    await csvWriter.writeRecords(rows);
+    console.log(rows);
+  }
 }
 
-function flatten(lists) {
-  return lists.reduce((a, b) => a.concat(b), []);
+/**
+ * outputs a csv of ordered and ranked tokens by rarity score.
+ * @param {Array[Objects]} ranking sorted ranking data
+ */
+function outputRankingCSV(ranking) {
+  const csvWriter = createCsvWriter({
+    path: path.join(basePath, "build/_ranking.csv"),
+    header: [
+      { id: "name", title: "NAME" },
+      { id: "raritySum", title: "Rarity Sum" },
+    ],
+  });
+  csvWriter.writeRecords(ranking);
 }
 
-function getDirectories(srcpath) {
-  return fs
-    .readdirSync(srcpath)
-    .map((file) => path.join(srcpath, file))
-    .filter((path) => fs.statSync(path).isDirectory());
-}
-
-function getDirectoriesRecursive(srcpath) {
-  return [
-    srcpath,
-    ...flatten(getDirectories(srcpath).map(getDirectoriesRecursive)),
-  ];
-}
+calculate();
