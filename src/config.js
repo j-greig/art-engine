@@ -28,7 +28,7 @@ const hashImages = true;
 const layerConfigurations = [
   {
     // TINNIES
-    growEditionSizeTo: 1000, //1000
+    growEditionSizeTo: 500, //1000
     namePrefix: "StrongBot",
     layersOrder: [
       { name: "Background" },
@@ -115,13 +115,22 @@ const layerConfigurations = [
  * The current version requires all layers to have unique names, or you may
  * accidentally set incompatibilities for the _wrong_ item.
  */
-const stickieOuties = ["Rainbow chad", "Triple chad", "Toothy chad", "Ninja bear", "Low battery", "Fishface", "Star-eyed smile", "Star-eyed toothy", "Flaming skull"]
-const pixelFaces = ["Pixel cry", "Pixel excitement", "Pixel grimace", "Pixel happy", "Pixel tongue"]
-const stickieOutiesAndPixelFaces = stickieOuties.concat(pixelFaces)
+
+ // Pre-defined sets
+
+const stickieOuties = ["Whiskers","Spikes","Halo","Rainbow chad", "Bandana","Triple chad", "Toothy chad", "Ninja bear", "Low battery", "Fishface", "Star-eyed smile", "Star-eyed toothy", "Flaming skull", "Unicorn", "Devil", "3D glasses", "Cat"];
+
+const pixelFaces = ["Pixel excitement", "Pixel happy", "Pixel tongue"];
+
+const stickieOutiesAndPixelFaces = stickieOuties.concat(pixelFaces);
 
 const incompatible = {
 
-  // TINNIES
+  /////////////////////////////////////////////
+  /////////////////////////////////////////////
+  //
+  // TINNIE INCOMPATABILITIES
+  //
   Stoner: ["Apollo","Node", "Headphones"],
 
   "Floating green": ["Angry cyclops"],
@@ -130,60 +139,85 @@ const incompatible = {
   "Floating red": ["Angry cyclops"],
   "Floating yellow": ["Angry cyclops"],
 
-}
-
-// WORKINGS
-const incompatibleXXXXXXXXXX = {
-
-  // TINNIES INCOMPATABILITIES
-  "Stoner": "Apollo",
-  "Unicorn": "Headphones",
-  "Unicorn": "Rocket blue",
-
-  "Ponzi": ["Cat"],
-
+  /////////////////////////////////////////////
+  /////////////////////////////////////////////
+  //
   // JARHEAD INCOMPATABILITIES
+  //
+
   "Warrior": ["Cat"],
   "Angry cloud": ["Cloud"],
   // "Gadget Alien": ["Speakers"," Halo", "Crown", "Spikes", "Devil"],
 
+  /////////////////////////////////////////////
+  /////////////////////////////////////////////
+  //
   // FLATSCREEN INCOMPATABILITIES
+  //
 
-  // Horns: Prevent stickie-out things overlapping
-  "Purple horns flatscreen": ["Rainbow chad", "Triple chad", "Toothy chad", "Ninja bear", "Low battery", "Fishface", "Star-eyed smile", "Star-eyed toothy", "Rodent"],
-  "Yellow horns flatscreen": ["Rainbow chad", "Triple chad", "Toothy chad", "Ninja bear", "Low battery", "Fishface", "Star-eyed smile", "Star-eyed toothy", "Rodent"],
-  "Blue horns flatscreen": ["Rainbow chad", "Triple chad", "Toothy chad", "Ninja bear", "Low battery", "Fishface", "Star-eyed smile", "Star-eyed toothy", "Rodent"],
-  "Pink horns flatscreen": ["Rainbow chad", "Triple chad", "Toothy chad", "Ninja bear", "Low battery", "Fishface", "Star-eyed smile", "Star-eyed toothy", "Rodent"],
-
-  "Node flatscreen": ["Rainbow chad", "Triple chad", "Toothy chad", "Ninja bear", "Low battery", "Fishface", "Star-eyed smile", "Star-eyed toothy"],
+  // Prevent stickie-out things overlapping
+  "Horny": stickieOuties,
 
   // Prevent arrow overlap with stickie outties
-  "Green arrow flatscreen": stickieOuties,
-  "Red arrow flatscreen": stickieOuties,
-  "Blue arrow flatscreen": stickieOuties,
+  "Arrow": stickieOuties,
+
+  // Prevent USB/CD drive overlaps
+  "Noughties": stickieOuties,
+
+  // Prevent Unicorn overlaps
+  "Unicorn": stickieOuties,
 
   // Prevent pixel faces and sockets on speaker ears
-  "Pink speakers flatscreen": stickieOutiesAndPixelFaces,
-  "Blue speakers flatscreen": stickieOutiesAndPixelFaces,
-
-  // Prevent pixel faces and glasses on console
-  // "Console flatscreen": ["Pixel cry", "Pixel excitement", "Pixel grimace", "Pixel happy", "Pixel tongue", "Star-eyed smile", "Star-eyed toothy"],
-  "Console flatscreen": stickieOutiesAndPixelFaces,
+  "Console": stickieOutiesAndPixelFaces,
 
   // Prevent skull overlapping pencil or socket
-  "Pencil pink and green": ["Flaming skull", "Low battery"],
+  "Artist": ["Flaming skull", "Low battery"],
+
+  // Prevent pixel / bandana overlaps
+  // TODO: **** Update with latest pixel face selection! ****
+  "Pixel excitement": ["Bandana"],
+  "Pixel happy": ["Bandana"],
+  "Pixel tongue": ["Bandana"],
+
+  // Prevent Ninja bear overlaps
+  "Ninja bear": ["Bandana"],
+
+  // Prevent speaker overlaps
+  "Speakers": ["Halo", "Bandana", "Spikes", "Whiskers", "3D glasses", "Flaming skull"],
+
+  // Prevent Chad overlaps
+  "Toothy chad": ["Spikes", "Whiskers", "Halo"],
+  "Triple chad": ["Spikes", "Whiskers", "Halo", "Bandana"],
+
+  // Prevent speaker overlaps
+  "3D glasses": ["Whiskers", "Spikes", "Halo", "Bandana"],
+
+  // Prevent spoke overlaps
+  "Spikes": ["Rainbow chad"],
+
+  // Prevent bandana overlaps
+  "Fishface": ["Bandana", "Halo"],
+  "Triple grimace": ["Bandana"],
+
+  // Prevent node overlaps
+  "Node": ["Spikes"],
 
   // Prevent wings overlapping skull flames or socket
-  "Insect flyer blue": ["Flaming skull", "Low battery"],
+  "Insect flyer": ["Flaming skull", "Low battery"],
+  "Flyer": ["Flaming skull", "Low battery"],
+  "Water canon": ["Flaming skull", "Low battery"],
 
-  // Prevent fish and pixel faces inside helmet, also prevent helmet clashing with socket, rodent, and bear ears
-  "Yellow helmet flatscreen" : ["Fishface", "Pixel cry", "Pixel excitement", "Pixel grimace", "Pixel happy", "Pixel tongue", "Low battery", "Ninja bear", "Triple chad", "Rodent"],
-  "Pink helmet flatscreen" : ["Fishface", "Pixel cry", "Pixel excitement", "Pixel grimace", "Pixel happy", "Pixel tongue", "Low battery", "Ninja bear", "Triple chad", "Rodent"],
+  // Prevent helmet extrusions
+  "Helmet" : ["Fishface", "Pixel excitement", "Pixel happy", "Pixel tongue", "Low battery", "Ninja bear", "Triple chad", "Rodent", "Flaming skull", "Halo", "Bandana"],
 
   // Prevent rodent (tail) over sword
-  "Swordsman white and pink" : ["Rodent"]
+  "Warrior" : ["Rodent"],
 
-};
+  // Prevent rodent ears over halo
+  "Rodent" : ["Halo"]
+
+}
+
 
 /**
  * Require combinations of files when constructing DNA, this bypasses the
@@ -269,8 +303,8 @@ const uniqueDnaTorrance = 10000;
 const useRootTraitType = true;
 
 const preview = {
-  thumbPerRow: 12,
-  thumbWidth: 300,
+  thumbPerRow: 10,
+  thumbWidth: 400,
   imageRatio: format.width / format.height,
   imageName: "preview.png",
 };
