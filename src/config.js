@@ -28,7 +28,7 @@ const hashImages = true;
 const layerConfigurations = [
   {
     // TINNIES
-    growEditionSizeTo: 500, //1000
+    growEditionSizeTo: 1000, //1000
     namePrefix: "StrongBot",
     layersOrder: [
       { name: "Background" },
@@ -134,14 +134,17 @@ const incompatible = {
 
 // WORKINGS
 const incompatibleXXXXXXXXXX = {
-  // TINNIES INCOMPATABILITIES
 
+  // TINNIES INCOMPATABILITIES
   "Stoner": "Apollo",
   "Unicorn": "Headphones",
   "Unicorn": "Rocket blue",
 
+  "Ponzi": ["Cat"],
+
   // JARHEAD INCOMPATABILITIES
-  "Soldier": ["Cat"],
+  "Warrior": ["Cat"],
+  "Angry cloud": ["Cloud"],
   // "Gadget Alien": ["Speakers"," Halo", "Crown", "Spikes", "Devil"],
 
   // FLATSCREEN INCOMPATABILITIES
@@ -193,10 +196,12 @@ const incompatibleXXXXXXXXXX = {
  */
 const forcedCombinations = {
   // TINNIES
+  "Ponzi": ["Yellow","Halo","Money printer","Yellow floating","Yellow rivet"],
+  "Money": ["Green","Curved","Green chart","Yellow floating","Green basic"],
 
   // JARHEADS
-  "Alien Insect": ["Cracked Jar"],
-  "Gadget Alien": ["Nodule Jar"],
+  "Insectoid": ["Cracked"],
+  // "Gadget alien": ["Nodule Jar"],
 
   // FLATSCREENS
   "Low battery": ["Drone NONE"],
@@ -213,14 +218,13 @@ const shuffleLayerConfigurations = false;
  */
 const traitValueOverrides = {
   // "Body Jarhead": "Body",
-  // "gold chain": "GOLDEN NECKLACE",
 };
 
 const debugLogs = true;
 
 const format = {
-  width: 1500,
-  height: 1500,
+  width: 3000,
+  height: 3000,
 };
 
 const background = {
@@ -236,30 +240,20 @@ const extraAttributes = () => [
   //
   {
   trait_type: "Strength",
-    value: Math.round(Math.random() * 100)
+    value: Math.round(Math.random() * 9) + 1
   },
   {
   trait_type: "Intelligence",
-    value: Math.round(Math.random() * 100)
+    value: Math.round(Math.random() * 9) + 1
   },
   {
   trait_type: "Luck",
-    value: Math.round(Math.random() * 100)
+    value: Math.round(Math.random() * 9) + 1
   }
   // {
   //   display_type: "boost_number",
   //   trait_type: "Aqua Power",
   //   value: Math.random() * 100,
-  // },
-  // {
-  //   display_type: "boost_number",
-  //   trait_type: "Health",
-  //   value: Math.random() * 100,
-  // },
-  // {
-  //   display_type: "boost_number",
-  //   trait_type: "Mana",
-  //   value: Math.floor(Math.random() * 100),
   // },
 ];
 
