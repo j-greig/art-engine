@@ -28,7 +28,7 @@ const hashImages = true;
 const layerConfigurations = [
   {
     // TINNIES
-    growEditionSizeTo: 500, //1000
+    growEditionSizeTo: 4000, //1000
     namePrefix: "StrongBot",
     layersOrder: [
       { name: "Background" },
